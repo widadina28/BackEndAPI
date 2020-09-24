@@ -42,6 +42,8 @@ module.exports = {
             console.log(field);
             if (results.length) {
                 db.query(`DELETE FROM engineer WHERE id_engineer = ${id}`, (err, result, field) => {
+                  console.log(result);
+                  console.log(err);
                         cb(result)
                 })
             } else {
@@ -53,6 +55,7 @@ module.exports = {
     getDataEngineerModel: (orderKey, searchKey, searchValue ,limit, offset, cb) => {
         db.query(`SELECT engineer.id_engineer, engineer.name_engineer, GROUP_CONCAT(skill.name_skill), freelance.name_freelance,account_engineer.name_account,location.name_loc, engineer.cost, engineer.rate, engineer.description_engineer, engineer.image, engineer.createAt, engineer.updateAt, engineer.status FROM engineer JOIN expertise ON engineer.id_engineer=expertise.id_engineer JOIN skill ON skill.id_skill=expertise.id_skill JOIN freelance ON freelance.id_freelance=engineer.id_freelance JOIN account_engineer ON account_engineer.id_acc_engineer=engineer.id_acc_engineer JOIN location ON location.id_loc=engineer.id_loc WHERE ${searchKey} LIKE '%${searchValue}%' GROUP BY expertise.id_engineer ORDER BY ${orderKey} DESC LIMIT ${limit}  OFFSET ${offset}`, (err, result, fields)=>{
                 cb(result)
+                // console.log(result);
         })
     }
 }
