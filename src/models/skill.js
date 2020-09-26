@@ -1,40 +1,59 @@
 const db = require('../helpers/db')
 module.exports = {
-  getDataSkillByIDModel: (id, cb) => {
-    db.query(`SELECT * FROM skill WHERE id_skill = ${id}`, (_err, result, _field) => {
-      console.log(result)
-      cb(result)
+  getDataSkillByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM skill WHERE id_skill = ${id}`, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  createSkillModel: (arr, cb) => {
-    const query = `INSERT INTO skill (name_skill) VALUES('${arr[0]}')`
-    db.query(query, (_err, result, _field) => {
-      cb(result)
+  createSkillModel: (body) => {
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO skill SET ?', body, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  putSkillModel: (arr, id_skill, cb) => {
-    db.query(`SELECT * FROM skill WHERE id_skill = ${id_skill}`, (_err, result, _field) => {
-      if (result.length) {
-        db.query(`UPDATE skill SET name_skill='${arr[0]}' WHERE id_skill= ${id_skill}`, (_err, results, _field) => {
-          cb(results)
-        })
-      }
+  putSkillModel: (body, id) => {
+    return new Promise ((resolve, reject) => {
+      db.query(`UPDATE skill SET ? WHERE id_skill='${id}'`, body, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  deleteSkillModel: (id, cb) => {
-    db.query(`SELECT * FROM skill WHERE id_skill = ${id}`, (err, results) => {
-      if (results.length) {
-        db.query(`DELETE FROM skill WHERE id_skill = ${id}`, (_err, result) => {
-          cb(result)
-        })
-      } else {
-        cb(err)
-      }
+  deleteSkillModel: (id) => {
+    return new Promise ((resolve, reject)=> {
+      db.query(`DELETE FROM skill WHERE id_skill = '${id}'`, (err, result, _field)=>{
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  getDataSkillModel: (limit, offset, cb) => {
-    db.query(`SELECT * FROM skill LIMIT ${limit} OFFSET ${offset}`, (_err, result, _fields) => {
-      cb(result)
+  getDataSkillModel: (limit, offset) => {
+    return new Promise((resolve, reject)=> {
+      db.query(`SELECT *, (SELECT COUNT(*) FROM skill) as count FROM skill LIMIT ${limit} OFFSET ${offset}`, (err, result, _fields) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
+    
   }
 }

@@ -7,110 +7,89 @@ const {
 } = require('../models/engineer')
 
 module.exports = {
-  getDataEngineerByID: (req, res) => {
+  getDataEngineerByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataEngineerByIDModel(id, result => {
+    try {
+      const result = await getDataEngineerByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
           message: `Data Engineer id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data Engineer ${id} not found`
-        })
-      }
-    })
-  },
-  createEngineer: (req, res) => {
-    const {
-      name_engineer,
-      id_freelance,
-      id_loc,
-      cost,
-      rate,
-      id_acc_engineer,
-      description_engineer,
-      image,
-      createAt,
-      updateAt,
-      status
-    } = req.body
-    if (name_engineer && id_freelance && id_loc && cost && rate && id_acc_engineer && description_engineer && image && createAt && updateAt && status) {
-      createEngineerModel([name_engineer, id_freelance, id_loc, cost, rate, id_acc_engineer, description_engineer, image, createAt, updateAt, status], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Experience data has been created',
-          data: req.body
-        })
+    }
+  }
+    catch (error) {
+      res.send({
+        success: false,
+        message: `Data Engineer ${id} not found`
       })
-    } else {
+    }
+  },
+  createEngineer: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createEngineerModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Engineer data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putEngineer: (req, res) => {
-    const id_engineer = req.params.id
-    const {
-      name_engineer,
-      id_freelance,
-      id_loc,
-      cost,
-      rate,
-      id_acc_engineer,
-      description_engineer,
-      image,
-      createAt,
-      updateAt,
-      status
-    } = req.body
-    if (name_engineer && id_freelance && id_loc && cost && rate && id_acc_engineer && description_engineer && image && createAt && updateAt && status) {
-      putEngineerModel([name_engineer, id_freelance, id_loc, cost, rate, id_acc_engineer, description_engineer, image, createAt, updateAt, status], id_engineer, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Engineer with id ${id_engineer} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putEngineer: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putEngineerModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteEngineer: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteEngineerModel(id, result => {
-      if (result === null) {
+  deleteEngineer: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteEngineerModel(id)
+      if (result.affectedRows) {
         res.send({
-          message: 'Data not found!'
+          success: true,
+          message: `Item company id ${id} has been deleted`
         })
-      } else {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Item Engineer id ${id} has been deleted`
+    } else {
+      res.send({
+            message: 'Data not found!'
           })
-        }
-      }
-    })
+    }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataEngineer: (req, res) => {
+  getDataEngineer: async (req, res) => {
     let {
       page,
       limit,
@@ -148,20 +127,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataEngineerModel(orderKey, searchKey, searchValue, limit, offset, result => {
-      // console.log(result);
+    try {
+      const result = await getDataEngineerModel(orderKey, searchKey, searchValue, limit, offset)
+      const count = result[0].count
       if (result.length) {
         res.send({
           success: true,
-          message: 'List Engineer',
+          message: 'List engineer',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

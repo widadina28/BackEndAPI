@@ -7,95 +7,89 @@ const {
 } = require('../models/portofolio')
 
 module.exports = {
-  getDataPortofolioByID: (req, res) => {
+  getDataPortofolioByID:async (req, res) => {
     const {
       id
     } = req.params
-    getDataPortofolioByIDModel(id, result => {
+    try {
+      const result = await getDataPortofolioByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
-          message: `Data portofolio id ${id}`,
+          message: `Data Portofolio id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data portofolio ${id} not found`
-        })
       }
-    })
-  },
-  createPortofolio: (req, res) => {
-    const {
-      id_engineer,
-      aplication_name,
-      link_repo,
-      image
-    } = req.body
-    if (id_engineer && aplication_name && link_repo && image) {
-      createPortofolioModel([id_engineer, aplication_name, link_repo, image], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Portofolio data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data Portofolio ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createPortofolio: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createPortofolioModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Portofolio data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putPortofolio: (req, res) => {
-    const id_portofolio = req.params.id
-    const {
-      id_engineer,
-      aplication_name,
-      link_repo,
-      image
-    } = req.body
-    if (id_engineer && aplication_name && link_repo && image) {
-      putPortofolioModel([id_engineer, aplication_name, link_repo, image], id_portofolio, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Portofolio with id ${id_portofolio} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putPortofolio: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putPortofolioModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deletePortofolio: (req, res) => {
-    const {
-      id
-    } = req.params
-    deletePortofolioModel(id, result => {
-      if (result.affectedRows) {
-        res.send({
-          success: true,
-          message: `Item Portofolio id ${id} has been deleted`
-        })
+  deletePortofolio:  async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deletePortofolioModel(id)
+        if (result.affectedRows) {
+          res.send({
+            success: true,
+            message: `Item portofolio id ${id} has been deleted`
+          })
       } else {
         res.send({
-          success: false,
-          message: 'Failed to delete!'
-        })
+              message: 'Data not found!'
+            })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataPortofolio: (req, res) => {
+  getDataPortofolio: async (req, res) => {
     let {
       page,
       limit
@@ -113,20 +107,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataPortofolioModel(limit, offset, result => {
-      console.log(result)
-            if (result.length) {
+    try {
+      const result = await getDataPortofolioModel(limit, offset)
+      const count = result[0].count
+      if (result.length) {
         res.send({
           success: true,
-          message: 'List Portofolio',
+          message: 'List company',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

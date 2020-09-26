@@ -7,90 +7,89 @@ const {
 } = require('../models/skill')
 
 module.exports = {
-  getDataSkillByID: (req, res) => {
+  getDataSkillByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataSkillByIDModel(id, result => {
+    try {
+      const result = await getDataSkillByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
-          message: `Data skill id ${id}`,
+          message: `Data Skill id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data skill ${id} not found`
-        })
       }
-    })
-  },
-  createSkill: (req, res) => {
-    const {
-      name_skill
-    } = req.body
-    if (name_skill) {
-      createSkillModel([name_skill], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Skill data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data Skill ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createSkill:  async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createSkillModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Skill data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putSkill: (req, res) => {
-    const id_skill = req.params.id
-    const {
-      name_skill
-    } = req.body
-    if (name_skill) {
-      putSkillModel([name_skill], id_skill, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Skill with id ${id_skill} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putSkill: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putSkillModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteSkill: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteSkillModel(id, result => {
-      if (result === null) {
-        res.send({
-          message: 'Data not found!'
-        })
-      } else {
+  deleteSkill: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteSkillModel(id)
         if (result.affectedRows) {
           res.send({
             success: true,
             message: `Item skill id ${id} has been deleted`
           })
-        }
+      } else {
+        res.send({
+              message: 'Data not found!'
+            })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataSkill: (req, res) => {
+  getDataSkill: async (req, res) => {
     let {
       page,
       limit
@@ -108,19 +107,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataSkillModel(limit, offset, result => {
+    try {
+      const result = await getDataSkillModel(limit, offset)
+      const count = result[0].count
       if (result.length) {
         res.send({
           success: true,
-          message: 'List Skill',
+          message: 'List skill',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

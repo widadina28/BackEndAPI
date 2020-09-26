@@ -7,91 +7,89 @@ const {
 } = require('../models/freelance')
 
 module.exports = {
-  getDataFreelanceByID: (req, res) => {
+  getDataFreelanceByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataFreelanceByIDModel(id, result => {
+    try {
+      const result = await getDataFreelanceByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
-          message: `Data Freelance id ${id}`,
+          message: `Data freelance id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data Freelance ${id} not found`
-        })
       }
-    })
-  },
-  createFreelance: (req, res) => {
-    const {
-      name_freelance
-    } = req.body
-    if (name_freelance) {
-      createFreelanceModel([name_freelance], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Freelance data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data freelance ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createFreelance: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createFreelanceModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Freelance data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putFreelance: (req, res) => {
-    const id_freelance = req.params.id
-    const {
-      name_freelance
-    } = req.body
-    if (name_freelance) {
-      putFreelanceModel([name_freelance], id_freelance, result => {
-        console.log(result)
-                if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Freelance with id ${id_freelance} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putFreelance: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putFreelanceModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteFreelance: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteFreelanceModel(id, result => {
-      if (result == null) {
-        res.send({
-          message: 'Data not found!'
-        })
-      } else {
+  deleteFreelance: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteFreelanceModel(id)
         if (result.affectedRows) {
           res.send({
             success: true,
-            message: `Item experience id ${id} has been deleted`
+            message: `Item freelance id ${id} has been deleted`
           })
-        }
+      } else {
+        res.send({
+              message: 'Data not found!'
+            })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataFreelance: (req, res) => {
+  getDataFreelance: async (req, res) => {
     let {
       page,
       limit
@@ -109,19 +107,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataFreelanceModel(limit, offset, result => {
+    try {
+      const result = await getDataFreelanceModel(limit,offset)
+      const count = result[0].count
       if (result.length) {
         res.send({
           success: true,
           message: 'List Freelance',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

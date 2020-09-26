@@ -7,92 +7,89 @@ const {
 } = require('../models/expertise')
 
 module.exports = {
-  getDataExpertiseByID: (req, res) => {
+  getDataExpertiseByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataExpertiseByIDModel(id, result => {
+    try {
+      const result = await getDataExpertiseByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
-          message: `Data Expertise id ${id}`,
+          message: `Data expertise id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data Expertise ${id} not found`
-        })
       }
-    })
-  },
-  createExpertise: (req, res) => {
-    const {
-      id_skill,
-      id_engineer
-    } = req.body
-    if (id_skill && id_engineer) {
-      createExpertiseModel([id_skill, id_engineer], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Expertise data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data expertise ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createExpertise: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createExpertiseModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Expertise data has been created',
+        data: result
+      })
+    } catch (error) {
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putExpertise: (req, res) => {
-    const id_expertise = req.params.id
-    const {
-      id_skill,
-      id_engineer
-    } = req.body
-    if (id_skill && id_engineer) {
-      putExpertiseModel([id_skill, id_engineer], id_expertise, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Expertise with id ${id_skill} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putExpertise: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putExpertiseModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteExpertise: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteExpertiseModel(id, result => {
-      if (result === null) {
+  deleteExpertise: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteExpertiseModel(id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Item expertise id ${id} has been deleted`
+        })
+      } else {
         res.send({
           message: 'Data not found!'
         })
-      } else {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Item Project id ${id} has been deleted`
-          })
-        }
       }
-    })
+    } catch (error) {
+      console.log(error.message);
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataExpertise: (req, res) => {
+  getDataExpertise: async (req, res) => {
     let {
       page,
       limit
@@ -110,19 +107,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataExpertiseModel(limit, offset, result => {
+    try {
+      const result = await getDataExpertiseModel(limit, offset)
+      const count = result[0].count
       if (result.length) {
         res.send({
           success: true,
-          message: 'List Expertise',
+          message: 'List expertise',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

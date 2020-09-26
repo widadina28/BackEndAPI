@@ -7,118 +7,89 @@ const {
 } = require('../models/project')
 
 module.exports = {
-  getDataProjectByID: (req, res) => {
+  getDataProjectByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataProjectByIDModel(id, result => {
+    try {
+      const result = await getDataProjectByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
-          message: `Data Project id ${id}`,
+          message: `Data project id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data Project ${id} not found`
-        })
       }
-    })
-  },
-  createProject: (req, res) => {
-    const {
-      project_name,
-      description,
-      deadline,
-      image,
-      id_company,
-      createAt,
-      updateAt,
-      price
-    } = req.body
-    if (project_name && description && deadline && image && id_company && createAt && updateAt && price) {
-      createProjectModel([project_name,
-        description,
-        deadline,
-        image,
-        id_company,
-        createAt,
-        updateAt,
-        price], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Project data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createProject: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createProjectModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Project data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putProject: (req, res) => {
-    const id_project = req.params.id
-    const {
-      project_name,
-      description,
-      deadline,
-      image,
-      id_company,
-      createAt,
-      updateAt,
-      price
-    } = req.body
-    if (project_name && description && deadline && image && id_company && createAt && updateAt && price) {
-      putProjectModel([project_name,
-        description,
-        deadline,
-        image,
-        id_company,
-        createAt,
-        updateAt,
-        price], id_project, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Project with id ${id_project} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putProject: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putProjectModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteProject: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteProjectModel(id, result => {
-      if (result === null) {
-        res.send({
-          message: 'Data not found!'
-        })
-      } else {
+  deleteProject: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteProjectModel(id)
         if (result.affectedRows) {
           res.send({
             success: true,
-            message: `Item Project id ${id} has been deleted`
+            message: `Item project id ${id} has been deleted`
           })
-        }
+      } else {
+        res.send({
+              message: 'Data not found!'
+            })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataProject: (req, res) => {
+  getDataProject: async (req, res) => {
     let {
       page,
       limit
@@ -136,19 +107,27 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataProjectModel(limit, offset, result => {
+    try {
+      const result = await getDataProjectModel(limit, offset)
+      const count = result[0].count
       if (result.length) {
         res.send({
           success: true,
-          message: 'List Project',
+          message: 'List project',
+          meta: {
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+            pageActive: page
+
+          },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

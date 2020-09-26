@@ -7,110 +7,89 @@ const {
 } = require('../models/company')
 
 module.exports = {
-  getDataCompanyByID: (req, res) => {
+  getDataCompanyByID: async (req, res) => {
     const {
       id
     } = req.params
-    getDataCompanyByIDModel(id, result => {
+    try {
+      const result = await getDataCompanyByIDModel(id)
       if (result.length) {
         res.send({
           success: true,
           message: `Data company id ${id}`,
           data: result[0]
         })
-      } else {
-        res.send({
-          success: false,
-          message: `Data company ${id} not found`
-        })
       }
-    })
-  },
-  createCompany: (req, res) => {
-    const {
-      name,
-      field,
-      loc,
-      desc,
-      instagram,
-      telp,
-      linked,
-      image,
-      createAt,
-      updateAt,
-      id_acc_company
-    } = req.body
-    if (name && field && loc && desc && instagram && telp && linked && image && createAt && updateAt && id_acc_company) {
-      createCompanyModel([name, field, loc, desc, instagram, telp, linked, image, createAt, updateAt, id_acc_company], result => {
-        res.status(201).send({
-          success: true,
-          message: 'Company data has been created',
-          data: req.body
-        })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data company ${id} not found`
       })
-    } else {
+
+    }
+  },
+  createCompany: async (req, res) => {
+    const body = req.body
+    try {
+      const result = await createCompanyModel(body)
+      res.status(201).send({
+        success: true,
+        message: 'Company data has been created',
+        data: result
+      })
+    } catch (error) {
+      console.log(error);
       res.status(500).send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  putCompany: (req, res) => {
-    const id_company = req.params.id
-    const {
-      name_company,
-      field,
-      id_loc,
-      description_company,
-      instagram_company,
-      telp_company,
-      linkedin_company,
-      image,
-      createAt,
-      updateAt,
-      id_acc_company
-    } = req.body
-    if (name_company && field && id_loc && description_company && instagram_company && telp_company && linkedin_company && image && createAt && updateAt && id_acc_company) {
-      putCompanyModel([name_company, field, id_loc, description_company, instagram_company, telp_company, linkedin_company, image, createAt, updateAt, id_acc_company], id_company, result => {
-        if (result.affectedRows) {
-          res.send({
-            success: true,
-            message: `Project with id ${id_company} has been updated`
-          })
-        } else {
-          res.send({
-            success: false,
-            message: 'Failed to update data!'
-          })
-        }
-      })
-    } else {
+  putCompany: async (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    try {
+      const result = await putCompanyModel(body, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
       res.send({
         success: false,
         message: 'All field must be filled!'
       })
     }
   },
-  deleteCompany: (req, res) => {
-    const {
-      id
-    } = req.params
-    deleteCompanyModel(id, result => {
-      if (result == null) {
-        res.send({
-          message: 'Data not found!'
-        })
-      } else {
+  deleteCompany: async (req, res) => {
+    const id = req.params.id
+    try {
+      const result = await deleteCompanyModel(id)
         if (result.affectedRows) {
           res.send({
             success: true,
-            message: `Item experience id ${id} has been deleted`
+            message: `Item company id ${id} has been deleted`
           })
-        }
+      } else {
+        res.send({
+              message: 'Data not found!'
+            })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'bad request!'
+      })
+    }
   },
-  getDataCompany: (req, res) => {
+  getDataCompany: async (req, res) => {
     let {
       page,
       limit
@@ -128,7 +107,8 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-    getDataCompanyModel(limit, offset, result => {
+    try {
+      const result = await getDataCompanyModel(limit, offset)
       const count = result[0].count
       if (result.length) {
         res.send({
@@ -142,12 +122,12 @@ module.exports = {
           },
           data: result
         })
-      } else {
-        res.send({
-          success: true,
-          message: 'There is no item on list'
-        })
       }
-    })
+    } catch (error) {
+      res.send({
+        success: true,
+        message: 'There is no item on list'
+      })
+    }
   }
 }

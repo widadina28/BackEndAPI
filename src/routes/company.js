@@ -7,11 +7,12 @@ const {
   getDataCompany
 } = require('../controller/company')
 const router = Router()
+const { authorizationcomp} = require('../middleware/auth')
 
-router.get('/', getDataCompany)
-router.get('/:id', getDataCompanyByID)
-router.post('/', createCompany)
-router.put('/:id', putCompany)
-router.delete('/:id', deleteCompany)
+router.get('/',authorizationcomp, getDataCompany)
+router.get('/:id',authorizationcomp, getDataCompanyByID)
+router.post('/',authorizationcomp, createCompany)
+router.put('/:id',authorizationcomp, putCompany)
+router.delete('/:id',authorizationcomp, deleteCompany)
 
 module.exports = router

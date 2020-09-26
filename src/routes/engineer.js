@@ -7,11 +7,12 @@ const {
   getDataEngineer
 } = require('../controller/engineer')
 const router = Router()
+const { authorizationeng} = require('../middleware/auth')
 
-router.get('/:id', getDataEngineerByID)
-router.post('/', createEngineer)
-router.put('/:id', putEngineer)
-router.delete('/:id', deleteEngineer)
-router.get('/', getDataEngineer)
+router.get('/:id', authorizationeng, getDataEngineerByID)
+router.post('/', authorizationeng, createEngineer)
+router.put('/:id',authorizationeng, putEngineer)
+router.delete('/:id',authorizationeng, deleteEngineer)
+router.get('/',authorizationeng, getDataEngineer)
 
 module.exports = router

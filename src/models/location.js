@@ -1,40 +1,58 @@
 const db = require('../helpers/db')
 module.exports = {
-  getDataLocationByIDModel: (id_loc, cb) => {
-    db.query(`SELECT * FROM location WHERE id_loc = ${id_loc}`, (_err, result, _field) => {
-      cb(result)
+  getDataLocationByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM location WHERE id_loc = ${id}`, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  createLocationModel: (arr, cb) => {
-    const query = `INSERT INTO location (name_loc) VALUES('${arr[0]}')`
-    db.query(query, (_err, result, _field) => {
-      cb(result)
+  createLocationModel: (body) => {
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO location SET ?', body, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  putLocationModel: (arr, id_loc, cb) => {
-    console.log(arr)
-    db.query(`SELECT * FROM location WHERE id_loc = ${id_loc}`, (_err, result, _field) => {
-      if (result.length) {
-        db.query(`UPDATE location SET name_loc='${arr[0]}' WHERE id_loc= ${id_loc}`, (_err, results, _field) => {
-          cb(results)
-        })
-      }
+  putLocationModel: (body, id) => {
+    return new Promise ((resolve, reject) => {
+      db.query(`UPDATE location SET ? WHERE id_loc='${id}'`, body, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  deleteLocationModel: (id, cb) => {
-    db.query(`SELECT * FROM location WHERE id_loc = ${id}`, (_err, results, _field) => {
-      if (results.length) {
-        db.query(`DELETE FROM location WHERE id_loc = ${id}`, (_err, result, _field) => {
-          cb(result)
-        })
-      } else {cb(_err)}
+  deleteLocationModel: (id) => {
+    return new Promise ((resolve, reject)=> {
+      db.query(`DELETE FROM location WHERE id_loc = '${id}'`, (err, result, _field)=>{
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
     })
   },
-  getDataLocationModel: (limit, offset, cb) => {
-    db.query(`SELECT * FROM location LIMIT ${limit} OFFSET ${offset}`, (err, result, _fields) => {
-      if (!err) {
-        cb(result)
-      }
-    })
+  getDataLocationModel: (limit, offset) => {
+    return new Promise ((resolve, reject) => {
+      db.query(`SELECT *, (SELECT COUNT(*) FROM location) as count FROM location LIMIT ${limit} OFFSET ${offset}`, (err, result, _fields) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
+    })  
   }
 }

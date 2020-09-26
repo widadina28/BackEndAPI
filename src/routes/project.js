@@ -7,11 +7,12 @@ const {
   getDataProject
 } = require('../controller/project')
 const router = Router()
+const { authorizationcomp} = require('../middleware/auth')
 
-router.get('/:id', getDataProjectByID)
-router.post('/', createProject)
-router.put('/:id', putProject)
-router.delete('/:id', deleteProject)
-router.get('/', getDataProject)
+router.get('/:id',authorizationcomp, getDataProjectByID)
+router.post('/',authorizationcomp, createProject)
+router.put('/:id',authorizationcomp, putProject)
+router.delete('/:id',authorizationcomp, deleteProject)
+router.get('/',authorizationcomp, getDataProject)
 
 module.exports = router

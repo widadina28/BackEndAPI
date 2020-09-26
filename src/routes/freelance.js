@@ -7,11 +7,12 @@ const {
   getDataFreelance
 } = require('../controller/freelance')
 const router = Router()
+const { authorizationeng} = require('../middleware/auth')
 
-router.get('/:id', getDataFreelanceByID)
-router.post('/', createFreelance)
-router.put('/:id', putFreelance)
-router.delete('/:id', deleteFreelance)
-router.get('/', getDataFreelance)
+router.get('/:id', authorizationeng, getDataFreelanceByID)
+router.post('/', authorizationeng, createFreelance)
+router.put('/:id',authorizationeng, putFreelance)
+router.delete('/:id',authorizationeng, deleteFreelance)
+router.get('/', authorizationeng, getDataFreelance)
 
 module.exports = router

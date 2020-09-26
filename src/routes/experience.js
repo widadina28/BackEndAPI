@@ -7,11 +7,12 @@ const {
   getDataExperience
 } = require('../controller/experience')
 const router = Router()
+const { authorizationeng} = require('../middleware/auth')
 
-router.get('/:id', getDataExperienceByID)
-router.post('/', createExperience)
-router.put('/:id', putExperience)
-router.delete('/:id', deleteExperience)
-router.get('/', getDataExperience)
+router.get('/:id',authorizationeng, getDataExperienceByID)
+router.post('/',authorizationeng, createExperience)
+router.put('/:id',authorizationeng, putExperience)
+router.delete('/:id',authorizationeng, deleteExperience)
+router.get('/',authorizationeng, getDataExperience)
 
 module.exports = router
