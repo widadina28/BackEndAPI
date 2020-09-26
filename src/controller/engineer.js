@@ -29,9 +29,12 @@ module.exports = {
     }
   },
   createEngineer: async (req, res) => {
-    const body = req.body
+    const {name_engineer, id_freelance, id_loc, cost, rate, description_engineer, status, id_account} = req.body
+    const setData ={
+      name_engineer, id_freelance, id_loc, cost, rate, description_engineer, image: req.file === undefined ? '' : req.file.filename, status, id_account
+    }
     try {
-      const result = await createEngineerModel(body)
+      const result = await createEngineerModel(setData)
       res.status(201).send({
         success: true,
         message: 'Engineer data has been created',

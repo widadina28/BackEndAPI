@@ -28,15 +28,15 @@ app.use('/hire', hireRouter)
 app.use('/engineer', engineerRouter)
 app.use('/project', projectRouter)
 app.use('/account', accountRouter )
-// app.use(cors())
+app.use(cors())
 
-// app.use((request, response, next)=>{
-//   response.header('Access-Control-Allow-Origin', '*')
-//   response.header('Access-Control-Allow- Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization')
-//   next()
-// })
+app.use((request, response, next)=>{
+  response.header('Access-Control-Allow-Origin', '*')
+  response.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  next()
+})
 
-// app.get('/', (_request, response) => {response.send('Android 1 Backend')})
+app.get('/', (_request, response) => {response.send('Android 1 Backend')})
 
 app.listen(process.env.PORT, ()=>{
   console.log(`App Listen on Port${process.env.PORT}!`)

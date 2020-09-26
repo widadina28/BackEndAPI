@@ -29,9 +29,10 @@ module.exports = {
     }
   },
   createProject: async (req, res) => {
-    const body = req.body
+    const {project_name, description, deadline, id_company, price} = req.body
+    const setData = {project_name, description, deadline, image:req.file === undefined ? '' : req.file.filename, id_company, price}
     try {
-      const result = await createProjectModel(body)
+      const result = await createProjectModel(setData)
       res.status(201).send({
         success: true,
         message: 'Project data has been created',

@@ -13,6 +13,7 @@ module.exports = {
   },
   createCompanyModel: (body) => {
     return new Promise((resolve, reject) => {
+      // console.log(body);
       db.query('INSERT INTO company SET ?', body, (err, result, _field) => {
         if (err) {
           reject(new Error(err))

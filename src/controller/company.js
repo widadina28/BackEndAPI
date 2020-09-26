@@ -29,9 +29,29 @@ module.exports = {
     }
   },
   createCompany: async (req, res) => {
-    const body = req.body
+    const {name_company,
+      field,
+      position,
+      id_loc,
+      description_company,
+      instagram_company,
+      telp_company,
+      linkedin_company,
+      id_account} = req.body
+    const setData = {
+      name_company,
+      field,
+      position,
+      id_loc,
+      description_company,
+      instagram_company,
+      telp_company,
+      linkedin_company,
+      image: req.file === undefined ? '' : req.file.filename,
+      id_account
+    }
     try {
-      const result = await createCompanyModel(body)
+      const result = await createCompanyModel(setData)
       res.status(201).send({
         success: true,
         message: 'Company data has been created',
@@ -40,7 +60,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.status(500).send({
-        success: false,
+        succevalss: false,
         message: 'All field must be filled!'
       })
     }

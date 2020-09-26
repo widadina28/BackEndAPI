@@ -8,10 +8,11 @@ const {
 } = require('../controller/company')
 const router = Router()
 const { authorizationcomp} = require('../middleware/auth')
+const uploadImage = require('../middleware/multer')
 
 router.get('/',authorizationcomp, getDataCompany)
 router.get('/:id',authorizationcomp, getDataCompanyByID)
-router.post('/',authorizationcomp, createCompany)
+router.post('/',authorizationcomp, uploadImage, createCompany)
 router.put('/:id',authorizationcomp, putCompany)
 router.delete('/:id',authorizationcomp, deleteCompany)
 

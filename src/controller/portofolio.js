@@ -29,9 +29,12 @@ module.exports = {
     }
   },
   createPortofolio: async (req, res) => {
-    const body = req.body
+    const {id_engineer, aplication_name, link_repo, type_porto} = req.body
+    const setData = {
+      id_engineer, aplication_name, link_repo, image:req.file === undefined ? '' : req.file.filename, type_porto
+    }
     try {
-      const result = await createPortofolioModel(body)
+      const result = await createPortofolioModel(setData)
       res.status(201).send({
         success: true,
         message: 'Portofolio data has been created',

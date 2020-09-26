@@ -8,9 +8,10 @@ const {
 } = require('../controller/portofolio')
 const router = Router()
 const { authorizationeng} = require('../middleware/auth')
+const uploadImage = require('../middleware/multer')
 
 router.get('/:id',authorizationeng, getDataPortofolioByID)
-router.post('/',authorizationeng, createPortofolio)
+router.post('/',authorizationeng, uploadImage, createPortofolio)
 router.put('/:id',authorizationeng, putPortofolio)
 router.delete('/:id',authorizationeng, deletePortofolio)
 router.get('/',authorizationeng, getDataPortofolio)
