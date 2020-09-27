@@ -13,6 +13,7 @@ const hireRouter = require('./src/routes/hire')
 const engineerRouter = require('./src/routes/engineer')
 const projectRouter = require('./src/routes/project')
 const accountRouter = require('./src/routes/account')
+const morgan = require('morgan')
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use('/engineer', engineerRouter)
 app.use('/project', projectRouter)
 app.use('/account', accountRouter )
 app.use(cors())
+app.use(morgan('dev'))
 
 app.use((request, response, next)=>{
   response.header('Access-Control-Allow-Origin', '*')
