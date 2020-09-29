@@ -31,6 +31,7 @@ module.exports = {
   createProject: async (req, res) => {
     const {project_name, description, deadline, id_company, price} = req.body
     const setData = {project_name, description, deadline, image:req.file === undefined ? '' : req.file.filename, id_company, price}
+    console.log(setData);
     try {
       const result = await createProjectModel(setData)
       res.status(201).send({
@@ -48,9 +49,11 @@ module.exports = {
   },
   putProject: async (req, res) => {
     const id = req.params.id
-    const body = req.body
+    const {project_name, description, deadline, id_company, price} = req.body
+    const setData = {project_name, description, deadline, image:req.file === undefined ? '' : req.file.filename, id_company, price}
+    console.log(setData);
     try {
-      const result = await putProjectModel(body, id)
+      const result = await putProjectModel(setData, id)
       if (result.affectedRows) {
         res.send({
           success: true,

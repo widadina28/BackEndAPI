@@ -24,6 +24,7 @@ module.exports = {
   },
   putProjectModel: (body, id) => {
     return new Promise((resolve, reject) => {
+      console.log(body);
       db.query(`UPDATE project SET ? WHERE id_project='${id}'`, body, (err, result, _field) => {
         if (err) {
           reject(new Error(err))

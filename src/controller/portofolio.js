@@ -50,9 +50,12 @@ module.exports = {
   },
   putPortofolio: async (req, res) => {
     const id = req.params.id
-    const body = req.body
+    const {id_engineer, aplication_name, link_repo, type_porto} = req.body
+    const setData = {
+      id_engineer, aplication_name, link_repo, image:req.file === undefined ? '' : req.file.filename, type_porto
+    }
     try {
-      const result = await putPortofolioModel(body, id)
+      const result = await putPortofolioModel(setData, id)
       if (result.affectedRows) {
         res.send({
           success: true,

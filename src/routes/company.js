@@ -13,7 +13,7 @@ const uploadImage = require('../middleware/multer')
 router.get('/',authorizationcomp, getDataCompany)
 router.get('/:id',authorizationcomp, getDataCompanyByID)
 router.post('/',authorizationcomp, uploadImage, createCompany)
-router.put('/:id',authorizationcomp, putCompany)
+router.put('/:id',authorizationcomp, uploadImage, putCompany)
 router.delete('/:id',authorizationcomp, deleteCompany)
 
 module.exports = router

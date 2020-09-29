@@ -12,7 +12,7 @@ const uploadImage = require('../middleware/multer')
 
 router.get('/:id',authorizationeng, getDataPortofolioByID)
 router.post('/',authorizationeng, uploadImage, createPortofolio)
-router.put('/:id',authorizationeng, putPortofolio)
+router.put('/:id',authorizationeng, uploadImage, putPortofolio)
 router.delete('/:id',authorizationeng, deletePortofolio)
 router.get('/',authorizationeng, getDataPortofolio)
 

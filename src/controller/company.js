@@ -67,9 +67,29 @@ module.exports = {
   },
   putCompany: async (req, res) => {
     const id = req.params.id
-    const body = req.body
+    const {name_company,
+      field,
+      position,
+      id_loc,
+      description_company,
+      instagram_company,
+      telp_company,
+      linkedin_company,
+      id_account} = req.body
+    const setData = {
+      name_company,
+      field,
+      position,
+      id_loc,
+      description_company,
+      instagram_company,
+      telp_company,
+      linkedin_company,
+      image: req.file === undefined ? '' : req.file.filename,
+      id_account
+    }
     try {
-      const result = await putCompanyModel(body, id)
+      const result = await putCompanyModel(setData, id)
       if (result.affectedRows) {
         res.send({
           success: true,

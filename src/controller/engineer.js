@@ -50,9 +50,12 @@ module.exports = {
   },
   putEngineer: async (req, res) => {
     const id = req.params.id
-    const body = req.body
+    const {name_engineer, id_freelance, id_loc, cost, rate, description_engineer, status, id_account} = req.body
+    const setData ={
+      name_engineer, id_freelance, id_loc, cost, rate, description_engineer, image: req.file === undefined ? '' : req.file.filename, status, id_account
+    }
     try {
-      const result = await putEngineerModel(body, id)
+      const result = await putEngineerModel(setData, id)
       if (result.affectedRows) {
         res.send({
           success: true,

@@ -12,7 +12,7 @@ const uploadImage = require('../middleware/multer')
 
 router.get('/:id', authorizationeng, getDataEngineerByID)
 router.post('/', authorizationeng, uploadImage, createEngineer)
-router.put('/:id',authorizationeng, putEngineer)
+router.put('/:id',authorizationeng, uploadImage, putEngineer)
 router.delete('/:id',authorizationeng, deleteEngineer)
 router.get('/',authorizationeng, getDataEngineer)
 
