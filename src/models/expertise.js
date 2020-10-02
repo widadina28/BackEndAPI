@@ -17,7 +17,11 @@ module.exports = {
         if (err) {
           reject(new Error(err))
         } else {
-          resolve(result)
+          const newResult = {
+            id: result.insertId,
+            ...body
+          }
+          resolve(newResult)
         }
       })
     })
