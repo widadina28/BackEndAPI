@@ -155,12 +155,12 @@ module.exports = {
         res.send({
           success: true,
           message: 'List company',
-          meta: {
-            totalRows: count,
-            totalPages: Math.ceil(count / limit),
-            pageActive: page
+          // meta: {
+          //   totalRows: count,
+          //   totalPages: Math.ceil(count / limit),
+          //   pageActive: page
 
-          },
+          // },
           data: result
         })
       }
