@@ -10,10 +10,10 @@ const router = Router()
 const { authorizationeng} = require('../middleware/auth')
 const uploadImage = require('../middleware/multer')
 
-router.get('/:id', authorizationeng, getDataEngineerByID)
+router.get('/:id', getDataEngineerByID)
 router.post('/', authorizationeng, uploadImage, createEngineer)
 router.put('/:id',authorizationeng, uploadImage, putEngineer)
 router.delete('/:id',authorizationeng, deleteEngineer)
-router.get('/',authorizationeng, getDataEngineer)
+router.get('/' ,getDataEngineer)
 
 module.exports = router

@@ -9,10 +9,10 @@ const {
 const router = Router()
 const { authorizationeng} = require('../middleware/auth')
 
-router.get('/:id',authorizationeng, getDataExpertiseByID)
+router.get('/:id', getDataExpertiseByID)
 router.post('/',authorizationeng, createExpertise)
 router.put('/:id',authorizationeng, putExpertise)
 router.delete('/:id',authorizationeng, deleteExpertise)
-router.get('/',authorizationeng, getDataExpertise)
+router.get('/', getDataExpertise)
 
 module.exports = router

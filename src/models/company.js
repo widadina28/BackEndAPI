@@ -20,7 +20,7 @@ module.exports = {
         } else {
           const newResult = {
             id: result.insertId,
-            ...body
+            ...setData
           }
           resolve(newResult)
         }
