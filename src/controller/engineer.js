@@ -121,7 +121,7 @@ module.exports = {
     }
 
     if (!limit) {
-      limit = 5
+      limit = 30
     } else {
       limit = parseInt(limit)
     }
