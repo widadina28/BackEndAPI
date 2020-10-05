@@ -37,7 +37,7 @@ module.exports = {
       instagram_company,
       telp_company,
       linkedin_company,
-      id_account} = req.body
+      idacc} = req.body
     const setData = {
       name_company,
       field,
@@ -48,7 +48,7 @@ module.exports = {
       telp_company,
       linkedin_company,
       image: req.file === undefined ? '' : req.file.filename,
-      id_account
+      idacc
     }
     try {
       const result = await createCompanyModel(setData)
@@ -76,7 +76,7 @@ module.exports = {
       instagram_company,
       telp_company,
       linkedin_company,
-      id_account} = req.body
+      idacc} = req.body
     const setData = {
       name_company,
       field,
@@ -87,7 +87,7 @@ module.exports = {
       telp_company,
       linkedin_company,
       image: req.file === undefined ? '' : req.file.filename,
-      id_account
+      idacc
     }
     try {
       const result = await putCompanyModel(setData, id)
