@@ -17,6 +17,8 @@ const morgan = require('morgan')
 
 const app = express()
 
+app.use('/uploads', express.static('uploads'))
+
 app.use(bodyParser.urlencoded({extended:false}))
 app.use('/company', companyRouter)
 app.use('/location', locationRouter)
