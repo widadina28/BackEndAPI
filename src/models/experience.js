@@ -2,7 +2,7 @@ const db = require('../helpers/db')
 module.exports = {
   getDataExperienceByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM experience WHERE id_experience = ${id}`, (err, result, _field) => {
+      db.query(`SELECT * FROM experience WHERE id_engineer = ${id}`, (err, result, _field) => {
         if (err) {
           reject(new Error(err))
         } else {
