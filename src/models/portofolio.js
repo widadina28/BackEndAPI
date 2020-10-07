@@ -2,7 +2,7 @@ const db = require('../helpers/db')
 module.exports = {
   getDataPortofolioByIDModel: (id, cb) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT engineer.name_engineer, portofolio.aplication_name, portofolio.link_repo, portofolio.image,portofolio.id_portofolio, (SELECT COUNT(*) FROM portofolio) as count FROM portofolio JOIN engineer ON portofolio.id_engineer = engineer.id WHERE id_engineer = ${id}`, (err, result, _field) => {
+      db.query(`SELECT * FROM portofolio WHERE id_engineer = ${id}`, (err, result, _field) => {
         if (err) {
           reject(new Error(err))
         } else {
@@ -50,7 +50,7 @@ module.exports = {
   },
   getDataPortofolioModel: (limit, offset, cb) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT engineer.name_engineer, portofolio.aplication_name, portofolio.link_repo, portofolio.image,portofolio.id_portofolio, (SELECT COUNT(*) FROM portofolio) as count FROM portofolio JOIN engineer ON portofolio.id_engineer = engineer.id LIMIT ${limit} OFFSET ${offset}`, (err, result, _fields) => {
+      db.query(`SELECT engineer.name_engineer, portofolio.aplication_name, portofolio.link_repo, portofolio.image,portofolio.id_portofolio, (SELECT COUNT(*) FROM portofolio) as count FROM portofolio JOIN engineer ON portofolio.id_engineer = engineer.id_engineer LIMIT ${limit} OFFSET ${offset}`, (err, result, _fields) => {
         if (err) {
           reject(new Error(err))
         } else {
