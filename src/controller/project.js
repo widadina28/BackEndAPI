@@ -99,7 +99,7 @@ module.exports = {
       limit
     } = req.query
     if (!limit) {
-      limit = 10
+      limit = 30
     } else {
       limit = parseInt(limit)
     }

@@ -2,7 +2,7 @@ const db = require('../helpers/db')
 module.exports = {
   getDataCompanyByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM company JOIN  account ON company.idacc=account.id_account WHERE idacc = ${id}`, (err, result, _field) => {
+      db.query(`SELECT company.name_company,company.field, company.position, company.description_company,company.instagram_company,company.telp_company,company.linkedin_company,company.image,company.createAt,company.updateAt,location.name_loc, account.name_account FROM company JOIN  account ON company.idacc=account.id_account JOIN location ON company.id_loc=location.id_loc WHERE idacc = ${id}`, (err, result, _field) => {
         if (err) {
           reject(new Error(err))
         } else {
