@@ -52,11 +52,12 @@ module.exports = {
     const {id} = req.params
     try{
       const result = await getProjectbyIDCompanyModel(id)
+      console.log(result);
       if (result.length) {
         res.send({
           success: true,
           message: `Data project id ${id}`,
-          data: result[0]
+          data: result
         })
       }
     } catch (error) {

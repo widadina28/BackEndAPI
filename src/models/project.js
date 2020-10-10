@@ -17,6 +17,7 @@ return new Promise((resolve, reject) => {
     if (err) {
       reject(new Error(err))
     } else {
+      console.log(result);
       resolve(result)
     }
   })
