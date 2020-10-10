@@ -4,12 +4,14 @@ const {
   createProject,
   putProject,
   deleteProject,
-  getDataProject
+  getDataProject,
+  getProjectbyIDCompany
 } = require('../controller/project')
 const router = Router()
 const { authorizationcomp} = require('../middleware/auth')
 const uploadImage = require('../middleware/multer')
 
+router.get('/company/:id' ,authorizationcomp, getProjectbyIDCompany)
 router.get('/:id',authorizationcomp, getDataProjectByID)
 router.post('/',authorizationcomp, uploadImage, createProject)
 router.put('/:id',authorizationcomp,uploadImage, putProject)

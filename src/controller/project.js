@@ -47,6 +47,25 @@ module.exports = {
       })
     }
   },
+  getProjectbyIDCompany: async(req, res) => {
+    const {id} = req.params
+    try{
+      const result = await this.getProjectbyIDCompanyModel(id)
+      if (result.length) {
+        res.send({
+          success: true,
+          message: `Data project id ${id}`,
+          data: result[0]
+        })
+      }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project ${id} not found`
+      })
+
+    }
+  },
   putProject: async (req, res) => {
     const id = req.params.id
     const {project_name, description, deadline, id_company, price} = req.body
