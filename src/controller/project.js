@@ -3,7 +3,8 @@ const {
   createProjectModel,
   putProjectModel,
   deleteProjectModel,
-  getDataProjectByIDModel
+  getDataProjectByIDModel,
+  getProjectbyIDCompanyModel
 } = require('../models/project')
 
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
   getProjectbyIDCompany: async(req, res) => {
     const {id} = req.params
     try{
-      const result = await this.getProjectbyIDCompanyModel(id)
+      const result = await getProjectbyIDCompanyModel(id)
       if (result.length) {
         res.send({
           success: true,
@@ -59,6 +60,7 @@ module.exports = {
         })
       }
     } catch (error) {
+      console.log(error);
       res.send({
         success: false,
         message: `Data project ${id} not found`
