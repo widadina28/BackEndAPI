@@ -28,7 +28,8 @@ module.exports = {
   },
   putEngineerModel: (body, id) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE engineer SET ? WHERE id='${id}'`, body, (err, result, _field) => {
+      db.query(`UPDATE engineer SET ? WHERE id_engineer='${id}'`, body, (err, result, _field) => {
+        console.log(err);
         if (err) {
           reject(new Error(err))
         } else {
