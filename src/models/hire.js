@@ -2,7 +2,7 @@ const db = require('../helpers/db')
 module.exports = {
   getDataHireByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM hire WHERE id_hire = ${id}`, (err, result, _field) => {
+      db.query(`SELECT * FROM hire WHERE id_engineer = ${id}`, (err, result, _field) => {
         if (err) {
           reject(new Error(err))
         } else {

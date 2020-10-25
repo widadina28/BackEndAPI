@@ -7,12 +7,12 @@ const {
   getDataHire
 } = require('../controller/hire')
 const router = Router()
-const { authorizationcomp} = require('../middleware/auth')
+const { authorizationcomp, authorizationeng} = require('../middleware/auth')
 
-router.get('/:id',authorizationcomp, getDataHireByID)
+router.get('/:id', getDataHireByID)
 router.post('/',authorizationcomp, createHire)
-router.put('/:id',authorizationcomp, putHire)
+router.put('/:id', putHire)
 router.delete('/:id',authorizationcomp, deleteHire)
-router.get('/',authorizationcomp, getDataHire)
+router.get('/', getDataHire)
 
 module.exports = router
