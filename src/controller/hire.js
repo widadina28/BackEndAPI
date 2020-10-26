@@ -3,7 +3,9 @@ const {
   createHireModel,
   putHireModel,
   deleteHireModel,
-  getDataHireByIDModel
+  getDataHireByIDModel,
+  getDataHireByIDHireModel,
+  patchHireModel
 } = require('../models/hire')
 
 module.exports = {
@@ -13,6 +15,27 @@ module.exports = {
     } = req.params
     try {
       const result = await getDataHireByIDModel(id)
+      if (result.length) {
+        res.send({
+          success: true,
+          message: `Data hire id ${id}`,
+          data: result
+        })
+      }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data hire ${id} not found`
+      })
+
+    }
+  },
+  getDataHireByIDHire: async (req, res) => {
+    const {
+      id
+    } = req.params
+    try {
+      const result = await getDataHireByIDHireModel(id)
       if (result.length) {
         res.send({
           success: true,
@@ -54,6 +77,29 @@ module.exports = {
         res.send({
           success: true,
           message: `Project with id ${id} has been updated`
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'Failed to update data!'
+        })
+      }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: 'All field must be filled!'
+      })
+    }
+  },
+  patchHire: async (req, res) => {
+    const id = req.params.id
+    const data = {status}
+    try {
+      const result = await patchHireModel(data, id)
+      if (result.affectedRows) {
+        res.send({
+          success: true,
+          message: `Project Status with id ${id} has been updated`
         })
       } else {
         res.send({

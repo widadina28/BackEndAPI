@@ -2,7 +2,18 @@ const db = require('../helpers/db')
 module.exports = {
   getDataHireByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT hire.id_hire, project.project_name, project.description, company.name_company, project.image FROM hire JOIN project ON hire.id_project = project.id_project JOIN company ON project.id_company = company.id_company WHERE id_engineer = ${id}`, (err, result, _field) => {
+      db.query(`SELECT hire.id_hire, project.project_name, project.description, company.name_company, project.image, hire.status FROM hire JOIN project ON hire.id_project = project.id_project JOIN company ON project.id_company = company.id_company WHERE id_engineer = ${id}`, (err, result, _field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+  getDataHireByIDHireModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT hire.id_hire, project.project_name, project.description, company.name_company, project.image, hire.status FROM hire JOIN project ON hire.id_project = project.id_project JOIN company ON project.id_company = company.id_company WHERE id_hire = ${id}`, (err, result, _field) => {
         if (err) {
           reject(new Error(err))
         } else {
@@ -22,6 +33,17 @@ module.exports = {
             ...body
           }
           resolve(newResult)
+        }
+      })
+    })
+  },
+  patchHireModel: (data, id) => {
+    return new Promise ((resolve, reject) => {
+      db.query(`UPDATE hire SET ${data} WHERE id_hire = ${id}`, (err, result, field) => {
+        if (err) {
+          reject(new Error(err))
+        } else {
+          resolve(result)
         }
       })
     })
