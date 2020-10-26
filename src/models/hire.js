@@ -39,7 +39,7 @@ module.exports = {
   },
   patchHireModel: (data, id) => {
     return new Promise ((resolve, reject) => {
-      db.query(`UPDATE hire SET ${data} WHERE id_hire = ${id}`, (err, result, field) => {
+      db.query(`UPDATE hire SET ? WHERE id_hire = ?`, [data, id], (err, result, field) => {
         if (err) {
           reject(new Error(err))
         } else {
