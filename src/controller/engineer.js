@@ -3,7 +3,8 @@ const {
   createEngineerModel,
   putEngineerModel,
   deleteEngineerModel,
-  getDataEngineerByIDModel
+  getDataEngineerByIDModel,
+  getDataEngineerByIDaccModel
 } = require('../models/engineer')
 
 module.exports = {
@@ -25,6 +26,27 @@ module.exports = {
       res.send({
         success: false,
         message: `Data Engineer ${id} not found`
+      })
+    }
+  },
+  getDataEngineerByIDacc: async (req, res) => {
+    const {
+      id
+    } = req.params
+    try {
+      const result = await getDataEngineerByIDaccModel(id)
+      if (result.length) {
+        res.send({
+          success: true,
+          message: `Data Engineer id Account ${id}`,
+          data: result[0]
+        })
+    }
+  }
+    catch (error) {
+      res.send({
+        success: false,
+        message: `Data Engineer id Account ${id} not found`
       })
     }
   },
