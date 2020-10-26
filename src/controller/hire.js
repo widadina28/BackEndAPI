@@ -40,7 +40,7 @@ module.exports = {
         res.send({
           success: true,
           message: `Data hire id ${id}`,
-          data: result
+          data: result[0]
         })
       }
     } catch (error) {
@@ -93,9 +93,9 @@ module.exports = {
   },
   patchHire: async (req, res) => {
     const id = req.params.id
-    const data = {status}
+    const body = req.body
     try {
-      const result = await patchHireModel(data, id)
+      const result = await patchHireModel(body, id)
       if (result.affectedRows) {
         res.send({
           success: true,
