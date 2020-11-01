@@ -5,7 +5,8 @@ const {
   deleteHireModel,
   getDataHireByIDModel,
   getDataHireByIDHireModel,
-  patchHireModel
+  patchHireModel,
+  getHireProjectModel
 } = require('../models/hire')
 
 module.exports = {
@@ -176,5 +177,27 @@ module.exports = {
         message: 'There is no item on list'
       })
     }
+  },
+  getHireProject : async (req,res) => {
+    const {
+      id
+    } = req.params
+    try {
+      const result = await getHireProjectModel(id)
+      if (result.length) {
+        res.send({
+          success: true,
+          message: `Data hire id project ${id}`,
+          data: result[0]
+        })
+      }
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data hire ${id} not found`
+      })
+
+    }
+
   }
 }

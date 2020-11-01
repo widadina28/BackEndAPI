@@ -80,6 +80,12 @@ module.exports = {
         }
       })
     })
-   
+  },
+  getHireProjectModel: (id) => {
+    return new Promise((resolve,reject) => {
+      db.query(`SELECT DISTINCT  hire.status, engineer.name_engineer  FROM hire JOIN engineer ON hire.id_engineer=engineer.id_engineer WHERE hire.id_project = ${id}`, (err,result)=> {
+        err?reject(new Error(err)) : resolve(result)
+      })
+    })
   }
 }
