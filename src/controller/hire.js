@@ -188,7 +188,7 @@ module.exports = {
         res.send({
           success: true,
           message: `Data hire id project ${id}`,
-          data: result[0]
+          data: result
         })
       }
     } catch (error) {
